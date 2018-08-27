@@ -1,0 +1,21 @@
+.container {
+    width: 600px;
+    padding: 30px;
+    background: #ba8d8d;
+    margin-top: 150px;
+    height: 300px;
+    color: white;
+    font-size: 30px;
+    margin-left: 300px;
+    border-style: solid;
+    border-color: white;
+    text-align: center;
+    vertical-align: middle;
+    position: absolute;
+    top: 27%;
+    left: 17%;
+    transform: translateX(-50%) translateY(-50%);
+    display: flex;
+    align-items: center;
+    line-height: 1.6;
+}
