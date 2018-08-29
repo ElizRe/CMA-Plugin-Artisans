@@ -44,7 +44,6 @@ function annuaire_artisans()
         add_submenu_page($parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url);
 }
 
-
 function annuaire_artisans_page_display()
 {
     $error_message = '';
