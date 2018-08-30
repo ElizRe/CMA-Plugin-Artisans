@@ -2,16 +2,6 @@
 
 //$wpdb->show_errors();
 // print_r( $wpdb->queries );
-function prefix_enqueue()
-{
-    // JS
-    wp_register_script('prefix_bootstrap', '//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js');
-    wp_enqueue_script('prefix_bootstrap');
-
-    // CSS
-    wp_register_style('prefix_bootstrap', '//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css');
-    wp_enqueue_style('prefix_bootstrap');
-}
 
 function artisans_form($atts)
 {
@@ -147,28 +137,17 @@ function artisans_results($atts)
                sub.cma = $activity AND artisan.town_id = $town");
 
     foreach ($results as $print) {
-        $list .= ' <div class="form-group">';
-        $list .= ' <label>Qualification Artisan:</label>' . $print->website_expert.'</div>';
-        $list .= '<div class="form-group">';
-        $list .= ' <label>Secteur activités:</label>'. $print->subactivity_name.'</div>';
-        $list .= ' <div class="form-group">';
-        $list .= ' <label>Business Name:</label>' . $print->business_name.'</div>';
-        $list .= ' <div class="form-group">';
-        $list .= ' <label>Address:</label>' . $print->address_1.'</div>';
-        $list .= ' <div class="form-group">';
-        $list .= ' <label>Address:</label>' . $print->address_2.'</div>';
-        $list .= ' <div class="form-group">';
-        $list .= ' <label>Téléphone:</label>0' . $print->telephone.'</div>';
-        $list .= ' <div class="form-group">';
-        $list .= ' <label>Fax:</label>0' . $print->fax.'</div>';
-        $list .= ' <div class="form-group">';
-        $list .= ' <label>email:</label>' . $print->email.'</div>';
-        $list .= ' <div class="form-group">';
-        $list .= '<label>Commune:</label>'. $print->town_name.'</div>';
-
-        $list .= ' <div class="form-group">';
-          $list .= ' <label>Code Postal:</label>'. $print->postal_code.'</div>';
-        $list .= '  </div>';
+        $list .= ' <div class="card bg-success text-white">';
+        $list .= ' <div class=<"card-body">';
+        $list .= ' <h5>Qualification Artisan:'. $print->website_expert.'</h5>';
+        $list .= ' <h5>Secteur activités:'. $print->subactivity_name.'</h5>';
+        $list .= ' <h4>Business Name:'. $print->business_name.'</h3>';
+        $list .= ' <h5>Address:'. $print->address_1.','. $print->address_2.'</h5>' ;
+        $list .= '<h5>Commune:'. $print->town_name.'</h5>';
+        $list .= ' <h5>Code Postal:'. $print->postal_code.'</h5>';
+        $list .= ' <h5>Téléphone:0' . $print->telephone.'</h5>';
+        $list .= ' <h5>Fax:0' . $print->fax.'</h5>';
+        $list .= ' <h5>email:' . $print->email.'</h5>';
         $list .= '  </div>';
     }
 

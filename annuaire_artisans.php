@@ -8,20 +8,21 @@
 * Author: Elizabeth Reed
 * License: GPL12
 */
-require('create_temp.php');
+
 require('create_artisan.php');
 require('parse.php');
 require('shortcodes.php');
+
 /**
  * Include CSS file for Artisan.
  */
 function load_custom_wp_admin_style($hook)
 {
-        // Load only on ?page=mypluginname
+        // Load only on page=tools/annuaire_artisans
     if ($hook != 'tools_page_annuaire_artisans') {
             return;
     }
-        wp_enqueue_style('style', plugins_url('css/style.css', __FILE__));
+        wp_enqueue_style('style', plugins_url('assets/css/style.css', __FILE__));
 }
 add_action('admin_enqueue_scripts', 'load_custom_wp_admin_style');
 

@@ -24,14 +24,14 @@ function annuaire_artisans_create_artisan()
         website_expert VARCHAR(50) NOT NULL,
         last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (website_code))
-        DEFAULT CHARACTER SET = utf8mb4";
+        $charset_collate;";
 
     $sql2 = "CREATE TABLE IF NOT EXISTS $table_name2(
         family_id SMALLINT NOT NULL,
         family_name VARCHAR(50) NOT NULL,
         last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (family_id))
-        DEFAULT CHARACTER SET = utf8mb4";
+        $charset_collate;";
 
     $sql3 = "CREATE TABLE IF NOT EXISTS $table_name3 (
         activity_id SMALLINT NOT NULL AUTO_INCREMENT,
@@ -47,7 +47,7 @@ function annuaire_artisans_create_artisan()
           REFERENCES wp_cma46_art_family (family_id)
           ON DELETE NO ACTION
           ON UPDATE NO ACTION)
-          DEFAULT CHARACTER SET = utf8mb4";
+         $charset_collate;";
 
     $sql4 = "CREATE TABLE IF NOT EXISTS $table_name4 (
         subactivity_id SMALLINT NOT NULL AUTO_INCREMENT,
@@ -62,14 +62,14 @@ function annuaire_artisans_create_artisan()
           REFERENCES wp_cma46_art_activity (cma_id)
           ON DELETE NO ACTION
           ON UPDATE NO ACTION)
-          DEFAULT CHARACTER SET = utf8mb4";
+          $charset_collate;";
 
     $sql5 = "CREATE TABLE IF NOT EXISTS $table_name5 (
         district_id SMALLINT NOT NULL,
         district_name VARCHAR(50) NOT NULL,
         last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (district_id))
-        DEFAULT CHARACTER SET = utf8mb4";
+        $charset_collate;";
 
     $sql6 = "CREATE TABLE IF NOT EXISTS $table_name6(
         town_id SMALLINT NOT NULL AUTO_INCREMENT,
@@ -83,7 +83,7 @@ function annuaire_artisans_create_artisan()
           REFERENCES wp_cma46_art_district (district_id)
           ON DELETE NO ACTION
           ON UPDATE NO ACTION)
-          DEFAULT CHARACTER SET = utf8mb4";
+          $charset_collate;";
               
 
     $sql7 = "CREATE TABLE IF NOT EXISTS $table_name7(
@@ -115,7 +115,6 @@ function annuaire_artisans_create_artisan()
           REFERENCES wp_cma46_art_subactivity (subactivity_id)
           ON DELETE NO ACTION
           ON UPDATE NO ACTION)
-          DEFAULT CHARACTER SET = utf8mb4
           $charset_collate;";
 
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');

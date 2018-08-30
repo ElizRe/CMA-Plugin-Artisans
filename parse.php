@@ -5,16 +5,17 @@ function annuaire_artisans_page_parse($file)
         $row = 0;
         // DELETE FROM $wpdb->prefix . "artisan"
         global $wpdb;
-        $table_name = $wpdb->prefix . "artisantemp";
+        $table_name = $wpdb->prefix . "artisan";
         $delete = $wpdb->query("TRUNCATE TABLE $table_name");
         
         while (($data = fgetcsv($handle, 0, "\t"))!== false) {
             $num = count($data);
             echo "<p> $num fields in line $row: <br /></p>\n";
+            
             annuaire_artisans_insert($data);
         }
-        fclose($handle);
     }
+        fclose($handle);
 }
 
 function annuaire_artisans_insert($data)
@@ -87,12 +88,11 @@ function annuaire_artisans_insert_website($code, $type)
 function annuaire_artisans_get_artisan_types($type)
 {
     $types = [
-        "ANNUAIRE SANS MAIL" => "Artisan",
-        "VITRINE"=> "Artisan",
+        "ANNUAIRE SANS MAIL"&& "VITRINE"=> "Artisan",
         "VITRINE GRATUITE ANNEE 1"=> "Artisan",
-    "VITRINE RMA" => "Les artisans de la Route des Métiers d'Art",
+    "VITRINE RMA" => "Les Artisans de la Route des Métiers d'Art",
         "VITRINE ECODEFIS" => "Les artisans labélisés Eco Défis",
-        "VITRINE ECO CONSTRUCTEUR" => "Les artisans labélisés Eco Constructeur",
+        "VITRINE ECO CONSTRUCTEUR" => "Les Artisans labélisés Eco Constructeur",
     ];
 
     return isset($types[$type]) ? $types[$type] : "";
@@ -146,8 +146,8 @@ function annuaire_artisans_insert_family($cma_id, $subactivity_name, $aprm_id)
     
     // Create if not exists
     if (!$exists) {
-        $name = annuaire_artisans_get_family_name($family_id);
-        if ($name) {
+        $family_name = annuaire_artisans_get_family_name($family_id);
+        if ($family_name) {
             $sql = $wpdb->prepare("INSERT INTO $table_name(family_id, family_name) VALUES(%d, %s)", $family_id, $family_name);
             $wpdb->query($sql);
         }
@@ -184,7 +184,7 @@ function annuaire_artisans_insert_family($cma_id, $subactivity_name, $aprm_id)
 // Artisan type hardcoded values
 function annuaire_artisans_get_family_name($family_id)
 {
-    $families = [
+    $family_name = [
     1 => "Alimentation",
     2 => "Bâtiment et habitat",
     3 => "Fabrication",
@@ -192,10 +192,10 @@ function annuaire_artisans_get_family_name($family_id)
     5 => "Services aux particuliers et aux entreprises",
     6 => "Véhicules : mécanique, réparation et construction",
     7 => "Artisanat d'Art",
-    8 => "Autres activités"
+    8 => "Autres activités",
     ];
 
-    return isset($families[$family_id]) ? $families[$family_id] : "";
+    return isset($family_name[$family_id]) ? $family_name[$family_id] : "";
 }
 
 // Artisan type hardcoded values
@@ -218,6 +218,8 @@ function annuaire_artisans_get_activity_name($cma_id)
     115 => "Torréfaction de café",
     116 => "Transformation de poissons, crustacés, mollusques",
     117 => "Transformation de produits végétaux",
+    201 => "Autres travaux de finition",
+    202 => "Autres travaux d'installation",
     203 =>"Carrelage, revêtements sol et mur",
     204 =>"Charpente, couverture, zinguerie, étanchéïté",
     205=>"Electricité, antennes,alarmes",
@@ -289,6 +291,7 @@ function annuaire_artisans_get_activity_name($cma_id)
      709=>"Restauration d'objets d'Art",
      710=>"Travail du verre et vitrail",
      711=>"Vannerie, cannage, rempaillage",
+     712=>"missing",
      801=>"Désinfection, dératisation, désinsectisation",
      802=>"Exploitation de carrière, extraction",
      803=>"Imprimerie,sérigraphie",
