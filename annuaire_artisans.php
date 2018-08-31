@@ -12,6 +12,16 @@
 require('create_artisan.php');
 require('parse.php');
 require('shortcodes.php');
+/** add action and filter hooks*/
+
+function ju_enqueue()
+{
+    wp_register_style('ju_bootstrap', get_template_directory_uri().'/assets/css/bootstrap.min.css');
+    //wp_register_script('js-upload-files', get_template_directory_uri().'/assets/js/js-upload-files.js');
+    wp_register_script('ju_bootstrap', get_template_directory_uri().'/assets/js/bootstrap.min.js');
+}
+
+
 
 /**
  * Include CSS file for Artisan.
@@ -19,13 +29,17 @@ require('shortcodes.php');
 function load_custom_wp_admin_style($hook)
 {
         // Load only on page=tools/annuaire_artisans
-    if ($hook != 'tools_page_annuaire_artisans') {
+    if ($hook != 'tools_page_annuaire_artisans'and 'page_annuaireartisanslot') {
             return;
     }
         wp_enqueue_style('style', plugins_url('assets/css/style.css', __FILE__));
+        wp_enqueue_style('ju_bootstrap', plugins_url('assets/css/bootstrap.min.css', __FILE__));
+        wp_enqueue_script('jquery');
+       // wp_enqueue_script('js-upload-files', plugins_url('assets/js/js-upload-files.js', __FILE__));
+        wp_enqueue_script('ju_bootstrap', plugins_url('assets/js/bootstrap.min.js', __FILE__));
 }
 add_action('admin_enqueue_scripts', 'load_custom_wp_admin_style');
-
+add_action('wp_enqueue_scripts', 'ju_enqueue');
 
 add_action('admin_menu', 'annuaire_artisans');
 
@@ -69,27 +83,27 @@ function annuaire_artisans_page_display()
     }
 
     ?>
-    
+             <!-- Standard Form -->
 <div class="container">
     <form role="form" method="post" input type="file" enctype="multipart/form-data" id="file" accept=".csv">
         <label>Sélectionner le ficher artisan_csv:</label>
         </br>
-        <input name="artisan_csv" type="file">
+        <input name="artisan_csv" class="btn btn-secondary"value="Chercher"type="file">
         </br>
-        <input name="submit" value="Importer" type="submit">
+        <input name="submit" class="btn btn-success"value="Importer" type="submit">
+    <input class="btn btn-danger" type="reset" value="Reset">
     </form>
 </div>
-
     <?php
 }
 
 
-global $annuaire_artisans_db_version;
-$annuaire_artisans_db_version = '1.0';
+    global $annuaire_artisans_db_version;
+    $annuaire_artisans_db_version = '1.0';
 
 
 
 
-add_shortcode('artisans-form', 'artisans_form');
-add_shortcode('artisans-results', 'artisans_results');
+    add_shortcode('artisans-form', 'artisans_form');
+    add_shortcode('artisans-results', 'artisans_results');
 ?>

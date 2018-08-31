@@ -2,6 +2,27 @@
 
 //$wpdb->show_errors();
 // print_r( $wpdb->queries );
+/* my test to use bootstrap on annuaire page */
+// load your plugin css into the website's front-end
+function myplugin_enqueue_style()
+{
+    wp_enqueue_style('myplugin-style', plugin_dir_url(__FILE__)."assets/css/bootstrap.min.css");
+}
+add_action('wp_enqueue_scripts', 'myplugin_enqueue_style');
+/* my test to use ajax in my form */
+
+add_action('wp_ajax_my_action', 'my_action');
+add_action('wp_ajax_nopriv_my_action', 'my_action');
+
+if (is_admin()) {
+    add_action('wp_ajax_my_frontend_action', 'my_frontend_action');
+    add_action('wp_ajax_nopriv_my_frontend_action', 'my_frontend_action');
+    add_action('wp_ajax_my_backend_action', 'my_backend_action');
+    // Add other back-end action hooks here
+} else {
+    // Add non-Ajax front-end action hooks here
+}
+
 
 function artisans_form($atts)
 {
@@ -97,7 +118,7 @@ function artisans_form($atts)
         $form .= '</select>';
     }
 
-    $form .= ' <input type="submit" value="Afficher les résultats">';
+    $form .= ' <input type="submit" class="btn btn-success" value="Afficher les résultats">';
     $form .= '</form>';
 
     return $form;
@@ -137,8 +158,9 @@ function artisans_results($atts)
                sub.cma = $activity AND artisan.town_id = $town");
 
     foreach ($results as $print) {
-        $list .= ' <div class="card bg-success text-white">';
-        $list .= ' <div class=<"card-body">';
+        $list .= ' <div class="<div class="card-columns">';
+        $list .= '<div class="card bg-primary">';
+        $list .= '<div class="card-body text-center">';
         $list .= ' <h5>Qualification Artisan:'. $print->website_expert.'</h5>';
         $list .= ' <h5>Secteur activités:'. $print->subactivity_name.'</h5>';
         $list .= ' <h4>Business Name:'. $print->business_name.'</h3>';
@@ -148,6 +170,7 @@ function artisans_results($atts)
         $list .= ' <h5>Téléphone:0' . $print->telephone.'</h5>';
         $list .= ' <h5>Fax:0' . $print->fax.'</h5>';
         $list .= ' <h5>email:' . $print->email.'</h5>';
+        $list .= '<button type="button" class="btn btn-secondary">Site Web</button>';
         $list .= '  </div>';
     }
 

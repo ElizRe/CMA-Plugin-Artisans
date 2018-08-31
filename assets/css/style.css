@@ -1,12 +1,12 @@
 .container {
-    width: 600px;
-    padding: 30px;
-    background: #ba8d8d;
+   max-width: 600px !important;
+    padding: 100px;
+    background: grey;
     margin-top: 150px;
     height: 300px;
     color: white;
-    font-size: 30px;
-    margin-left: 300px;
+    font-size: 30px !important;
+    margin-left: 300px !important;
     border-style: solid;
     border-color: white;
     text-align: center;
@@ -18,4 +18,8 @@
     display: flex;
     align-items: center;
     line-height: 1.6;
+}
+.container.admin {
+	border-style:solid;
+	border-color:black;
 }

@@ -3,6 +3,7 @@ function annuaire_artisans_page_parse($file)
 {
     if ($file && $handle = fopen($file, "r")) {
         $row = 0;
+
         // DELETE FROM $wpdb->prefix . "artisan"
         global $wpdb;
         $table_name = $wpdb->prefix . "artisan";
@@ -11,17 +12,17 @@ function annuaire_artisans_page_parse($file)
         while (($data = fgetcsv($handle, 0, "\t"))!== false) {
             $num = count($data);
             echo "<p> $num fields in line $row: <br /></p>\n";
-            
             annuaire_artisans_insert($data);
+            $row++;
         }
-    }
+    
         fclose($handle);
+    }
 }
-
 function annuaire_artisans_insert($data)
 {
     global $wpdb;
-    $table_name = $wpdb->prefix . "artisan";
+    $table_name = $wpdb->prefix ."artisan";
 
     // Table Website
     annuaire_artisans_insert_website($data[13], $data[14]);
