@@ -32,11 +32,11 @@ function load_custom_wp_admin_style($hook)
     if ($hook != 'tools_page_annuaire_artisans'and 'page_annuaireartisanslot') {
             return;
     }
-        wp_enqueue_style('style', plugins_url('assets/css/style.css', __FILE__));
-        wp_enqueue_style('ju_bootstrap', plugins_url('assets/css/bootstrap.min.css', __FILE__));
+        wp_enqueue_style('style', plugins_url('assets/css/erstyle.css', __FILE__));
+        wp_enqueue_style('er_bootstrap', plugins_url('assets/css/bootstrap.min.css', __FILE__));
         wp_enqueue_script('jquery');
        // wp_enqueue_script('js-upload-files', plugins_url('assets/js/js-upload-files.js', __FILE__));
-        wp_enqueue_script('ju_bootstrap', plugins_url('assets/js/bootstrap.min.js', __FILE__));
+        wp_enqueue_script('er_bootstrap', plugins_url('assets/js/bootstrap.min.js', __FILE__));
 }
 add_action('admin_enqueue_scripts', 'load_custom_wp_admin_style');
 add_action('wp_enqueue_scripts', 'ju_enqueue');

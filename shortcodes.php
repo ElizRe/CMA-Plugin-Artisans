@@ -1,14 +1,23 @@
 <?php
 
-//$wpdb->show_errors();
-// print_r( $wpdb->queries );
-/* my test to use bootstrap on annuaire page */
-// load your plugin css into the website's front-end
+// load my plugin css and bootstrap into the website's front-end
 function myplugin_enqueue_style()
 {
-    wp_enqueue_style('myplugin-style', plugin_dir_url(__FILE__)."assets/css/bootstrap.min.css");
+    
+   // wp_enqueue_style('myplugin-style2', plugins_url('assets/css/erstyle.css', __FILE__));
+
+    wp_enqueue_style('myplugin-style', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
+    wp_enqueue_script('jquery');
 }
-add_action('wp_enqueue_scripts', 'myplugin_enqueue_style');
+
+function myplugin_enqueue_script()
+{
+
+    wp_enqueue_script('bootstrap_js', 'https://code.jquery.com/jquery-3.3.1.slim.min.js');
+    wp_enqueue_script('popper_js', 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js');
+}
+add_action('wp_enqueue_scripts', 'myplugin_enqueue_style', 'myplugin_enqueue_script');
+
 /* my test to use ajax in my form */
 
 add_action('wp_ajax_my_action', 'my_action');
@@ -39,9 +48,11 @@ function artisans_form($atts)
     $form = '<form method="GET">';
 
      // expertise
+    $form .= '<div class="form-group">';
+    $form .= '<label for="website">Sélectionnez une démarche</label>';
+    $form .= '<br>';
     $form .= '<select name="website" id="s1" 	
-   				onchange="this.form.submit()">
-			  <option value="">Sélectionnez une démarche</option>';
+   				onchange="this.form.submit()">';
     $table_name = $wpdb->prefix . 'art_website';
     $filter = $wpdb->get_results("select * from $table_name");
     foreach ($filter as $row) {
@@ -51,9 +62,14 @@ function artisans_form($atts)
             $form .= '<option value="' . $row->website_code . '">' . $row->website_expert . '</option>';
         }
     }
+    $form .= ' </div>';
+    $form .= '<br>';
     $form .= '</select>';
 
     // Family of Activities
+    $form .= '<div class="form-group">';
+    $form .= '<label for="family">Sélectionnez un secteur d\'activités</label>';
+    $form .= '<br>';
     $form .= '<select name="family" id="s2" 	
    				onchange="this.form.submit()">
 			  <option value="">Sélectionnez un secteur d\'activités</option>';
@@ -66,13 +82,17 @@ function artisans_form($atts)
             $form .= '<option value="' . $row->family_id . '">' . $row->family_name . '</option>';
         }
     }
+    $form .= ' </div>';
+    $form .= '<br>';
     $form .= '</select>';
 
  // Activity
     if ($family) {
+        $form .= '<div class="form-group">';
+        $form .= '<label for="activity">Sélectionnez une activité</label>';
+        $form .= '<br>';
         $form .= '<select name="activity" id="s3" 	
-   				onchange="this.form.submit()">
-			  <option value="">Sélectionnez une activité</option>';
+   				onchange="this.form.submit()">';
         $table_name = $wpdb->prefix . 'art_activity';
         $filter = $wpdb->get_results("select * from $table_name WHERE SUBSTR(cma_id,1,1) = " . $family);
         foreach ($filter as $row) {
@@ -82,13 +102,17 @@ function artisans_form($atts)
                 $form .= '<option value="' . $row->cma_id . '">' . $row->activity_name . '</option>';
             }
         }
+        $form .= ' </div>';
+        $form .= '<br>';
         $form .= '</select>';
     }
 
     // District
-    $form .= '<select name="district" id="s5" 	
-   				onchange="this.form.submit()">
-			  <option value="">Sélectionnez un canton</option>';
+        $form .= '<div class="form-group">';
+        $form .= '<label for="district">Sélectionnez un canton</label>';
+        $form .= '<br>';
+        $form .= '<select name="district" id="s5" 	
+   				onchange="this.form.submit()">';
     $table_name = $wpdb->prefix . 'art_district';
     $filter = $wpdb->get_results("select * from $table_name");
     foreach ($filter as $row) {
@@ -98,14 +122,18 @@ function artisans_form($atts)
             $form .= '<option value="' . $row->district_id . '">' . $row->district_name . '</option>';
         }
     }
+    $form .= ' </div>';
+    $form .= '<br>';
     $form .= '</select>';
 
 
     // Town
     if ($district) {
+        $form .= '<div class="form-group">';
+        $form .= '<label for="town">Sélectionnez une commune</label>';
+        $form .= '<br>';
         $form .= '<select name="town" id="s6">
-        onchange="this.form.submit()">
-			  <option value="">Sélectionnez une commune</option>';
+        onchange="this.form.submit()">';
         $table_name = $wpdb->prefix . 'art_town';
         $filter = $wpdb->get_results("select * from $table_name WHERE district_id = " . $district);
         foreach ($filter as $row) {
@@ -115,9 +143,12 @@ function artisans_form($atts)
                 $form .= '<option value="' . $row->town_id . '">' . $row->town_name . '</option>';
             }
         }
+        $form .= ' </div>';
+        $form .= '<br>';
         $form .= '</select>';
     }
-
+    $form .= '<br>';
+    $form .= '<br>';
     $form .= ' <input type="submit" class="btn btn-success" value="Afficher les résultats">';
     $form .= '</form>';
 
@@ -140,7 +171,7 @@ function artisans_results($atts)
     $town = !empty($_GET['town']) ? (int)$_GET['town'] : null;
 
 
-    // $results = '@todo: get the results with params : expertise : ' . $expertise . ' and activity : ' . $activity . ' and activity ' and district :' . $district . ' and town : ' . $town;
+    // Get the results with params : expertise : ' . $expertise . ' and activity : ' . $activity . ' and activity ' and district :' . $district . ' and town : ' . $town;
     
     $table_name = $wpdb->prefix . 'artisan';
     $results = $wpdb->get_results("SELECT    website_expert,subactivity_name,business_name,address_1,
@@ -158,21 +189,31 @@ function artisans_results($atts)
                sub.cma = $activity AND artisan.town_id = $town");
 
     foreach ($results as $print) {
-        $list .= ' <div class="<div class="card-columns">';
-        $list .= '<div class="card bg-primary">';
-        $list .= '<div class="card-body text-center">';
-        $list .= ' <h5>Qualification Artisan:'. $print->website_expert.'</h5>';
-        $list .= ' <h5>Secteur activités:'. $print->subactivity_name.'</h5>';
-        $list .= ' <h4>Business Name:'. $print->business_name.'</h3>';
-        $list .= ' <h5>Address:'. $print->address_1.','. $print->address_2.'</h5>' ;
-        $list .= '<h5>Commune:'. $print->town_name.'</h5>';
-        $list .= ' <h5>Code Postal:'. $print->postal_code.'</h5>';
-        $list .= ' <h5>Téléphone:0' . $print->telephone.'</h5>';
-        $list .= ' <h5>Fax:0' . $print->fax.'</h5>';
-        $list .= ' <h5>email:' . $print->email.'</h5>';
-        $list .= '<button type="button" class="btn btn-secondary">Site Web</button>';
-        $list .= '  </div>';
+        $list .='<div class="container">';
+        $list .= '<h2>Les Artisans du Lot</h2>';
+        $list .= '<div class="row">';
+        $list .= '<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">';
+        $list .= '<div class="our-services-wrapper mb-60">';
+        $list .= '<div class="services-inner">';
+        $list .= '<div class="our-services-img">';
+        $list .= '<img src="https://www.orioninfosolutions.com/assets/img/icon/Agricultural-activities.png" width="68px" alt="">';
+        $list .= '</div>';
+        $list .= '<div class="our-services-text">';
+        $list .= '<p>Qualification Artisan:'. $print->website_expert.'</p>';
+        $list .= '<p>Secteur activités:'. $print->subactivity_name.'</p>';
+        $list .= '<p>Business Name:'. $print->business_name.'</p>';
+        $list .= '<p>Address:'. $print->address_1.','. $print->address_2.'</p>';
+        $list .= '<p>Commune:'. $print->town_name.'</p>';
+        $list .= '<p>Code Postal:'. $print->postal_code.'</p>';
+        $list .= '<p>Téléphone:0' . $print->telephone.'</p>';
+        $list .= '<p>Fax:0' . $print->fax.'</p>';
+        $list .= '<p>email:' . $print->email.'</p>';
+        $list .= '</div>';
+        $list .= '</div>';
+        $list .= '</div>';
+        $list .= '</div>';
     }
+
 
     return $list;
 }

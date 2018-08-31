@@ -89,8 +89,9 @@ function annuaire_artisans_insert_website($code, $type)
 function annuaire_artisans_get_artisan_types($type)
 {
     $types = [
-        "ANNUAIRE SANS MAIL"&& "VITRINE"=> "Artisan",
+        "ANNUAIRE SANS MAIL"=> "Artisan",
         "VITRINE GRATUITE ANNEE 1"=> "Artisan",
+        "VITRINE"=> "Artisan",
     "VITRINE RMA" => "Les Artisans de la Route des Métiers d'Art",
         "VITRINE ECODEFIS" => "Les artisans labélisés Eco Défis",
         "VITRINE ECO CONSTRUCTEUR" => "Les Artisans labélisés Eco Constructeur",
