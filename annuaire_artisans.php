@@ -14,11 +14,11 @@ require('parse.php');
 require('shortcodes.php');
 /** add action and filter hooks*/
 
-function ju_enqueue()
+function er_enqueue()
 {
-    wp_register_style('ju_bootstrap', get_template_directory_uri().'/assets/css/bootstrap.min.css');
+    wp_register_style('er_bootstrap', get_template_directory_uri().'/assets/css/bootstrap.min.css');
     //wp_register_script('js-upload-files', get_template_directory_uri().'/assets/js/js-upload-files.js');
-    wp_register_script('ju_bootstrap', get_template_directory_uri().'/assets/js/bootstrap.min.js');
+    wp_register_script('er_bootstrap', get_template_directory_uri().'/assets/js/bootstrap.min.js');
 }
 
 
@@ -39,7 +39,7 @@ function load_custom_wp_admin_style($hook)
         wp_enqueue_script('er_bootstrap', plugins_url('assets/js/bootstrap.min.js', __FILE__));
 }
 add_action('admin_enqueue_scripts', 'load_custom_wp_admin_style');
-add_action('wp_enqueue_scripts', 'ju_enqueue');
+add_action('wp_enqueue_scripts', 'er_enqueue');
 
 add_action('admin_menu', 'annuaire_artisans');
 

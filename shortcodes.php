@@ -188,11 +188,11 @@ function artisans_results($atts)
                artisan.website_code= $website AND
                sub.cma = $activity AND artisan.town_id = $town");
 
+    $list .='<div class="container-fluid">';
+    $list .= '<div class="row">';
     foreach ($results as $print) {
-        $list .='<div class="container">';
-        $list .= '<h2>Les Artisans du Lot</h2>';
-        $list .= '<div class="row">';
         $list .= '<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">';
+        $list .= '<h2>'. $print->business_name.'</h2>';
         $list .= '<div class="our-services-wrapper mb-60">';
         $list .= '<div class="services-inner">';
         $list .= '<div class="our-services-img">';
@@ -213,6 +213,8 @@ function artisans_results($atts)
         $list .= '</div>';
         $list .= '</div>';
     }
+    $list .= '</div>';
+    $list .= '</div>';
 
 
     return $list;
