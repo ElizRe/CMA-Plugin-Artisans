@@ -17,6 +17,7 @@ function annuaire_artisans_page_parse($file)
         }
     
         fclose($handle);
+        echo 'Le fichier CSV a été importé avec succès';
     }
 }
 function annuaire_artisans_insert($data)
@@ -48,7 +49,7 @@ function annuaire_artisans_insert($data)
 
         ) 
         VALUES (%d, %s, %s, %s, %s, %s, %s, %d, %d,%d)",
-        $data[0],
+        $data[1],
         $data[2],
         $data[3],
         $data[5],
@@ -172,7 +173,7 @@ function annuaire_artisans_insert_family($cma_id, $subactivity_name, $aprm_id)
     
     // Create if not exists
     if (!$exists) {
-        $sql = $wpdb->prepare("INSERT INTO ".$table_name3."(cma,aprm,subactivity_name) VALUES(%d,%s,%s)", $cma_id, $aprm_id, addslashes($subactivity_name));
+        $sql = $wpdb->prepare("REPLACE INTO ".$table_name3."(cma,aprm,subactivity_name) VALUES(%d,%s,%s)", $cma_id, $aprm_id, addslashes($subactivity_name));
         $wpdb->query($sql);
            // Get new subactivity id created by mysql
         $subactivity_id = $wpdb->insert_id;
@@ -293,7 +294,7 @@ function annuaire_artisans_get_activity_name($cma_id)
      709=>"Restauration d'objets d'Art",
      710=>"Travail du verre et vitrail",
      711=>"Vannerie, cannage, rempaillage",
-     712=>"missing",
+     712=>"Travaux de menuiserie bois et pvc",
      801=>"Désinfection, dératisation, désinsectisation",
      802=>"Exploitation de carrière, extraction",
      803=>"Imprimerie,sérigraphie",

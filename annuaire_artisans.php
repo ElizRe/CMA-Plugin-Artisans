@@ -1,12 +1,11 @@
 <?php
 /**
 * Plugin Name: Annuaire Artisans
-* Plugin URI: http://www.cma-cahors.fr/
 * Description: permettre de télécharger l'annuaire
-* des artisans en format excel.
+* des artisans en format csv.
 * Version: 1.0
 * Author: Elizabeth Reed
-* License: GPL12
+* License: GNU GPL version 3 ou toute version ultérieure
 */
 
 require('create_artisan.php');
@@ -32,7 +31,7 @@ function load_custom_wp_admin_style($hook)
     if ($hook != 'tools_page_annuaire_artisans'and 'page_annuaireartisanslot') {
             return;
     }
-        wp_enqueue_style('style', plugins_url('assets/css/erstyle.css', __FILE__));
+        wp_enqueue_style('erstyle', plugins_url('assets/css/erstyle.css', __FILE__));
         wp_enqueue_style('er_bootstrap', plugins_url('assets/css/bootstrap.min.css', __FILE__));
         wp_enqueue_script('jquery');
        // wp_enqueue_script('js-upload-files', plugins_url('assets/js/js-upload-files.js', __FILE__));
@@ -84,14 +83,16 @@ function annuaire_artisans_page_display()
 
     ?>
              <!-- Standard Form -->
-<div class="container">
+<div class="containeradmin">
     <form role="form" method="post" input type="file" enctype="multipart/form-data" id="file" accept=".csv">
         <label>Sélectionner le ficher artisan_csv:</label>
         </br>
         <input name="artisan_csv" class="btn btn-secondary"value="Chercher"type="file">
         </br>
+    </br>
         <input name="submit" class="btn btn-success"value="Importer" type="submit">
-    <input class="btn btn-danger" type="reset" value="Reset">
+    <input name="reset" class="btn btn-danger" value="Réinitialiser"
+    type="reset" >
     </form>
 </div>
     <?php

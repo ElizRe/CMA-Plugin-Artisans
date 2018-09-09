@@ -1,37 +1,23 @@
 <?php
 
 // load my plugin css and bootstrap into the website's front-end
-function myplugin_enqueue_style()
+function artisancss_enqueue_style()
 {
-    
-   // wp_enqueue_style('myplugin-style2', plugins_url('assets/css/erstyle.css', __FILE__));
-
-    wp_enqueue_style('myplugin-style', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
-    wp_enqueue_script('jquery');
+    wp_enqueue_style('erstyle', plugins_url('assets/css/erstyle.css', __FILE__));
+    wp_enqueue_style('artisan-style', plugins_url('assets/css/bootstrap.min.css', __FILE__));
 }
+// load bootstrap js into the website's front-end
 
-function myplugin_enqueue_script()
+function artisanjs_enqueue_script()
 {
-
     wp_enqueue_script('bootstrap_js', 'https://code.jquery.com/jquery-3.3.1.slim.min.js');
     wp_enqueue_script('popper_js', 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js');
 }
-add_action('wp_enqueue_scripts', 'myplugin_enqueue_style', 'myplugin_enqueue_script');
 
-/* my test to use ajax in my form */
+add_action('wp_enqueue_scripts', 'artisancss_enqueue_style', 'artisanjs_enqueue_script');
 
-add_action('wp_ajax_my_action', 'my_action');
-add_action('wp_ajax_nopriv_my_action', 'my_action');
 
-if (is_admin()) {
-    add_action('wp_ajax_my_frontend_action', 'my_frontend_action');
-    add_action('wp_ajax_nopriv_my_frontend_action', 'my_frontend_action');
-    add_action('wp_ajax_my_backend_action', 'my_backend_action');
-    // Add other back-end action hooks here
-} else {
-    // Add non-Ajax front-end action hooks here
-}
-
+/* main code to use dropdown menu annuaire artisan page*/
 
 function artisans_form($atts)
 {
@@ -49,10 +35,11 @@ function artisans_form($atts)
 
      // expertise
     $form .= '<div class="form-group">';
-    $form .= '<label for="website">Sélectionnez une démarche</label>';
+    $form .= '<label for {
+        ="website">Sélectionnez une démarche</label>';
     $form .= '<br>';
-    $form .= '<select name="website" id="s1" 	
-   				onchange="this.form.submit()">';
+    $form .= '<select name="website" id="s1"
+                onchange="this.form.submit()">';
     $table_name = $wpdb->prefix . 'art_website';
     $filter = $wpdb->get_results("select * from $table_name");
     foreach ($filter as $row) {
@@ -70,9 +57,9 @@ function artisans_form($atts)
     $form .= '<div class="form-group">';
     $form .= '<label for="family">Sélectionnez un secteur d\'activités</label>';
     $form .= '<br>';
-    $form .= '<select name="family" id="s2" 	
-   				onchange="this.form.submit()">
-			  <option value="">Sélectionnez un secteur d\'activités</option>';
+    $form .= '<select name="family" id="s2"     
+                onchange="this.form.submit()">
+              <option value="">Sélectionnez un secteur d\'activités</option>';
     $table_name = $wpdb->prefix . 'art_family';
     $filter = $wpdb->get_results("select * from $table_name");
     foreach ($filter as $row) {
@@ -91,8 +78,8 @@ function artisans_form($atts)
         $form .= '<div class="form-group">';
         $form .= '<label for="activity">Sélectionnez une activité</label>';
         $form .= '<br>';
-        $form .= '<select name="activity" id="s3" 	
-   				onchange="this.form.submit()">';
+        $form .= '<select name="activity" id="s3"   
+                onchange="this.form.submit()">';
         $table_name = $wpdb->prefix . 'art_activity';
         $filter = $wpdb->get_results("select * from $table_name WHERE SUBSTR(cma_id,1,1) = " . $family);
         foreach ($filter as $row) {
@@ -111,8 +98,8 @@ function artisans_form($atts)
         $form .= '<div class="form-group">';
         $form .= '<label for="district">Sélectionnez un canton</label>';
         $form .= '<br>';
-        $form .= '<select name="district" id="s5" 	
-   				onchange="this.form.submit()">';
+        $form .= '<select name="district" id="s5"   
+                onchange="this.form.submit()">';
     $table_name = $wpdb->prefix . 'art_district';
     $filter = $wpdb->get_results("select * from $table_name");
     foreach ($filter as $row) {
@@ -162,6 +149,7 @@ function artisans_results($atts)
     global $wpdb;
 
     $list = '';
+    $lien = "vitrines/". $print->rm_id.".htm";
 
     // Form values
     $website = !empty($_GET['website']) ? (int) $_GET['website'] : null;
@@ -171,22 +159,28 @@ function artisans_results($atts)
     $town = !empty($_GET['town']) ? (int)$_GET['town'] : null;
 
 
-    // Get the results with params : expertise : ' . $expertise . ' and activity : ' . $activity . ' and activity ' and district :' . $district . ' and town : ' . $town;
+    // Get the results of selections
     
-    $table_name = $wpdb->prefix . 'artisan';
-    $results = $wpdb->get_results("SELECT    website_expert,subactivity_name,business_name,address_1,
-               address_2,telephone,fax,email,postal_code,
-               artisan.website_code,town_name, sub.subactivity_id,cma
+    $table_name  = $wpdb->prefix . 'artisan';
+    $table_name2 = $wpdb->prefix . 'art_subactivity';
+    $table_name3 = $wpdb->prefix . 'art_town';
+    $table_name4 = $wpdb->prefix . 'art_website';
+
+    $results = $wpdb->get_results("SELECT rm_id,website_expert,subactivity_name,business_name,address_1,
+        address_2,telephone,fax,email,postal_code,
+        artisan.website_code,town_name,sub.subactivity_id,cma
                FROM $table_name as artisan
-               JOIN wp_cma46_art_subactivity as sub
+               JOIN $table_name2 as sub
                ON artisan.subactivity_id=sub.subactivity_id
-               JOIN wp_cma46_art_town as town
+               JOIN $table_name3 as town
                ON artisan.town_id=town.town_id
-               JOIN wp_cma46_art_website as web
+               JOIN  $table_name4 as web
                on artisan.website_code=web.website_code
                WHERE
-               artisan.website_code= $website AND
-               sub.cma = $activity AND artisan.town_id = $town");
+               artisan.website_code = $website 
+               AND
+               sub.cma = $activity 
+               AND artisan.town_id = $town");
 
     $list .='<div class="container-fluid">';
     $list .= '<div class="row">';
@@ -196,18 +190,19 @@ function artisans_results($atts)
         $list .= '<div class="our-services-wrapper mb-60">';
         $list .= '<div class="services-inner">';
         $list .= '<div class="our-services-img">';
-        $list .= '<img src="https://www.orioninfosolutions.com/assets/img/icon/Agricultural-activities.png" width="68px" alt="">';
+        $list .= '<img src="http://localhost:8888/wp-content/uploads/2018/09/artisan.png" width="68px" alt="artisan">';
         $list .= '</div>';
         $list .= '<div class="our-services-text">';
-        $list .= '<p>Qualification Artisan:'. $print->website_expert.'</p>';
-        $list .= '<p>Secteur activités:'. $print->subactivity_name.'</p>';
-        $list .= '<p>Business Name:'. $print->business_name.'</p>';
-        $list .= '<p>Address:'. $print->address_1.','. $print->address_2.'</p>';
-        $list .= '<p>Commune:'. $print->town_name.'</p>';
-        $list .= '<p>Code Postal:'. $print->postal_code.'</p>';
-        $list .= '<p>Téléphone:0' . $print->telephone.'</p>';
-        $list .= '<p>Fax:0' . $print->fax.'</p>';
-        $list .= '<p>email:' . $print->email.'</p>';
+        $list .= '<p>Qualification Artisanale: '. $print->website_expert.'</p>';
+        $list .= '<p>Activité:  '. $print->subactivity_name.'</p>';
+        $list .= '<p>'. $print->address_1.', '. $print->address_2.'</p>';
+        $list .= '<p>'. $print->town_name.',  '. $print->postal_code.'</p>';
+        $list .= '<p>Tél: ' . $print->telephone.'</p>';
+        $list .= '<p>Fax: ' . $print->fax.'</p>';
+        $list .= '<p>Courriel: </p>';
+        $list .= '<a href="mailto:'. $print->email.'">'. $print->email.'</a>';
+        $list .= '<p>Vitrine:</p>';
+        $list .= '<a href="http://www.cma-cahors.fr/vitrines/'.$print->rm_id.'.htm">'.$print->business_name.'</a>';
         $list .= '</div>';
         $list .= '</div>';
         $list .= '</div>';

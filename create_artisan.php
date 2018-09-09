@@ -50,13 +50,14 @@ function annuaire_artisans_create_artisan()
          $charset_collate;";
 
     $sql4 = "CREATE TABLE IF NOT EXISTS $table_name4 (
-        subactivity_id SMALLINT NOT NULL AUTO_INCREMENT,
+        subactivity_id INT NOT NULL AUTO_INCREMENT,
         cma SMALLINT NOT NULL,
-        subactivity_name VARCHAR(50) NOT NULL,
+        subactivity_name VARCHAR(255) NOT NULL,
         aprm VARCHAR(10) NOT NULL,
         last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (subactivity_id),
         INDEX ix_cma (cma),
+        UNIQUE INDEX subactivity_name_UNIQUE (subactivity_name ASC),
         CONSTRAINT fk_subactivity_activity
           FOREIGN KEY (cma)
           REFERENCES wp_cma46_art_activity (cma_id)
@@ -88,7 +89,7 @@ function annuaire_artisans_create_artisan()
 
     $sql7 = "CREATE TABLE IF NOT EXISTS $table_name7(
         artisan_id INT NOT NULL AUTO_INCREMENT,
-        rm_id SMALLINT NOT NULL,
+        rm_id INT(20) NOT NULL,
         business_name VARCHAR(255) NOT NULL,
         address_1 VARCHAR(100) NOT NULL,
         address_2 VARCHAR(100) NULL DEFAULT NULL,
@@ -97,7 +98,7 @@ function annuaire_artisans_create_artisan()
         fax VARCHAR(20) NULL DEFAULT NULL,
         email VARCHAR(75) NULL DEFAULT NULL,
         website_code SMALLINT NOT NULL,
-        subactivity_id SMALLINT NOT NULL,
+        subactivity_id INT NOT NULL,
         last_update TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (artisan_id),
         CONSTRAINT fk_artisan_website
