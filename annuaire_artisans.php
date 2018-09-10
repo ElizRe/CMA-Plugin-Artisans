@@ -13,11 +13,29 @@ require('parse.php');
 require('shortcodes.php');
 /** add action and filter hooks*/
 
+
 function er_enqueue()
 {
     wp_register_style('er_bootstrap', get_template_directory_uri().'/assets/css/bootstrap.min.css');
-    //wp_register_script('js-upload-files', get_template_directory_uri().'/assets/js/js-upload-files.js');
+    
     wp_register_script('er_bootstrap', get_template_directory_uri().'/assets/js/bootstrap.min.js');
+
+    wp_enqueue_script(
+        'artisanjs',
+        plugins_url('/assets/js/artisan-form.js', __FILE__),
+        ['jquery'],
+        time(),
+        true
+    );
+
+    wp_localize_script(
+        'artisanjs',
+        'artisanjs_globals',
+        [
+        'ajax_url'    => admin_url('admin-ajax.php'),
+        'nonce'       => wp_create_nonce('artisan_nonce')
+        ]
+    );
 }
 
 
@@ -85,7 +103,7 @@ function annuaire_artisans_page_display()
              <!-- Standard Form -->
 <div class="containeradmin">
     <form role="form" method="post" input type="file" enctype="multipart/form-data" id="file" accept=".csv">
-        <label>Sélectionner le ficher artisan_csv:</label>
+        <label>Sélectionner le ficher "artisan.csv":</label>
         </br>
         <input name="artisan_csv" class="btn btn-secondary"value="Chercher"type="file">
         </br>

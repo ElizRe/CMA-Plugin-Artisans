@@ -48,7 +48,7 @@ function annuaire_artisans_insert($data)
             `town_id`
 
         ) 
-        VALUES (%d, %s, %s, %s, %s, %s, %s, %d, %d,%d)",
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %d, %d,%d)",
         $data[1],
         $data[2],
         $data[3],
@@ -70,10 +70,10 @@ function annuaire_artisans_insert_website($code, $type)
     global $wpdb;
     $table_name = $wpdb->prefix . "art_website";
 
-    // Specif code for artisan with a CMA website
-    if ($type == "1 ANNUAIRE SANS MAIL") {
-        $code = 12;
-    }
+    // // Specif code for artisan with a CMA website
+    // if ($type == "1 ANNUAIRE SANS MAIL") {
+    //     $code = 11;
+    // }
 
     // Check if website type exist
     $exists = $wpdb->get_results("SELECT website_code FROM $table_name WHERE website_code = ".$code);
@@ -93,7 +93,7 @@ function annuaire_artisans_get_artisan_types($type)
         "ANNUAIRE SANS MAIL"=> "Artisan",
         "VITRINE GRATUITE ANNEE 1"=> "Artisan",
         "VITRINE"=> "Artisan",
-    "VITRINE RMA" => "Les Artisans de la Route des Métiers d'Art",
+        "VITRINE RMA" => "Les Artisans de la Route des Métiers d'Art",
         "VITRINE ECODEFIS" => "Les artisans labélisés Eco Défis",
         "VITRINE ECO CONSTRUCTEUR" => "Les Artisans labélisés Eco Constructeur",
     ];

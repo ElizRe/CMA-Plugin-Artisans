@@ -89,7 +89,7 @@ function annuaire_artisans_create_artisan()
 
     $sql7 = "CREATE TABLE IF NOT EXISTS $table_name7(
         artisan_id INT NOT NULL AUTO_INCREMENT,
-        rm_id INT(20) NOT NULL,
+        rm_id VARCHAR(9) NOT NULL,
         business_name VARCHAR(255) NOT NULL,
         address_1 VARCHAR(100) NOT NULL,
         address_2 VARCHAR(100) NULL DEFAULT NULL,

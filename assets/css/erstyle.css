@@ -36,28 +36,32 @@
 .our-services-img {
     float: left!important;
     margin-left: -36px!important;
-    margin-right: 22px!important;
+    margin-right: 10px!important;
     margin-top: 28px!important;
 }
 .our-services-text {
-    padding-right: 10px!important;
-    text-align: start !important;
-}
-.our-services-text {
     overflow: hidden!important;
-    padding: 28px 0 25px!important;
+    padding: 28px 10px 25px 0 !important;
 }
-.our-services-text h4 {
+.our-services-text p {
+    line-height: 14px !important;
+}
+.our-services-text span {
+    text-decoration: underline;
+}
+h2.artisan {
     color: #222222!important;
     font-size: 18px!important;
     font-weight: 700!important;
     letter-spacing: 1px!important;
     margin-bottom: 8px!important;
     padding-bottom: 10px!important;
+    padding-left: 35px!important;
     position: relative!important;
     text-transform: uppercase!important;
+    max-width: 
 }
-.our-services-text h4::before {
+h2.artisan::before {
     background: #ec6d48 none repeat scroll 0 0!important;
     bottom: 0!important;
     content: ""!important;
@@ -82,4 +86,10 @@ p {
 }
 .col-xl-4 {
     text-align:end; 
+}
+
+.artisans-filters {
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
