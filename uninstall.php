@@ -25,6 +25,8 @@ $table_name4 = $wpdb->prefix . "art_district";
 $table_name5 = $wpdb->prefix . "art_activity";
 $table_name6 = $wpdb->prefix . "art_family";
 
+$wpdb->query("SET FOREIGN_KEY_CHECKS = 0");
+
 $wpdb->query("DROP TABLE `{$table_name}`");
 
 $wpdb->query("DROP TABLE `{$table_name1}`");
@@ -38,5 +40,7 @@ $wpdb->query("DROP TABLE `{$table_name4}`");
 $wpdb->query("DROP TABLE `{$table_name5}`");
 
 $wpdb->query("DROP TABLE `{$table_name6}`");
+
+$wpdb->query("SET FOREIGN_KEY_CHECKS = 1");
 
 delete_option('annuaire_artisan_plugin');

@@ -6,17 +6,31 @@ function annuaire_artisans_page_parse($file)
 
         // DELETE FROM $wpdb->prefix . "artisan"
         global $wpdb;
+        $wpdb->query("SET FOREIGN_KEY_CHECKS = 0");
         $table_name = $wpdb->prefix . "artisan";
-        $delete = $wpdb->query("TRUNCATE TABLE $table_name");
+        $wpdb->query("TRUNCATE TABLE $table_name");
+        $table_name = $wpdb->prefix . "art_website";
+        $wpdb->query("TRUNCATE TABLE $table_name");
+        $table_name = $wpdb->prefix . "art_subactivity";
+        $wpdb->query("TRUNCATE TABLE $table_name");
+        $table_name = $wpdb->prefix . "art_town";
+        $wpdb->query("TRUNCATE TABLE $table_name");
+        $table_name = $wpdb->prefix . "art_district";
+        $wpdb->query("TRUNCATE TABLE $table_name");
+        $table_name = $wpdb->prefix . "art_activity";
+        $wpdb->query("TRUNCATE TABLE $table_name");
+        $table_name = $wpdb->prefix . "art_family";
+        $wpdb->query("TRUNCATE TABLE $table_name");
+        $wpdb->query("SET FOREIGN_KEY_CHECKS = 1");
         
         while (($data = fgetcsv($handle, 0, "\t"))!== false) {
             $num = count($data);
-            echo "<p> $num fields in line $row: <br /></p>\n";
-            annuaire_artisans_insert($data);
+            //annuaire_artisans_insert($data);
             $row++;
         }
-    
+
         fclose($handle);
+        echo "<p>$row artisans importés</p>\n";
         echo 'Le fichier CSV a été importé avec succès';
     }
 }
