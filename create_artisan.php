@@ -99,6 +99,7 @@ function annuaire_artisans_create_artisan()
         email VARCHAR(75) NULL DEFAULT NULL,
         website_code SMALLINT NOT NULL,
         subactivity_id INT NOT NULL,
+        level VARCHAR(200) NULL,
         last_update TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (artisan_id),
         CONSTRAINT fk_artisan_website

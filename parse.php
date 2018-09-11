@@ -24,8 +24,7 @@ function annuaire_artisans_page_parse($file)
         $wpdb->query("SET FOREIGN_KEY_CHECKS = 1");
         
         while (($data = fgetcsv($handle, 0, "\t"))!== false) {
-            $num = count($data);
-            //annuaire_artisans_insert($data);
+            annuaire_artisans_insert($data);
             $row++;
         }
 
@@ -59,10 +58,11 @@ function annuaire_artisans_insert($data)
             `business_name`, 
             `website_code`,
             `subactivity_id`,
-            `town_id`
+            `town_id`,
+            `level`
 
         ) 
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %d, %d,%d)",
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %d, %d,%d,%s)",
         $data[1],
         $data[2],
         $data[3],
@@ -72,7 +72,8 @@ function annuaire_artisans_insert($data)
         $data[10],
         $data[13],
         $subactivity_id,
-        $town_id
+        $town_id,
+        $data[24]
     );
 
     
@@ -84,10 +85,10 @@ function annuaire_artisans_insert_website($code, $type)
     global $wpdb;
     $table_name = $wpdb->prefix . "art_website";
 
-    // // Specif code for artisan with a CMA website
-    // if ($type == "1 ANNUAIRE SANS MAIL") {
-    //     $code = 11;
-    // }
+    // Specif code for artisan with a CMA website
+    if ($type == "1 ANNUAIRE SANS MAIL") {
+        $code = 11;
+    }
 
     // Check if website type exist
     $exists = $wpdb->get_results("SELECT website_code FROM $table_name WHERE website_code = ".$code);
@@ -187,7 +188,7 @@ function annuaire_artisans_insert_family($cma_id, $subactivity_name, $aprm_id)
     
     // Create if not exists
     if (!$exists) {
-        $sql = $wpdb->prepare("REPLACE INTO ".$table_name3."(cma,aprm,subactivity_name) VALUES(%d,%s,%s)", $cma_id, $aprm_id, addslashes($subactivity_name));
+        $sql = $wpdb->prepare("REPLACE INTO ".$table_name3."(cma,aprm,subactivity_name) VALUES(%d,%s,%s)", $cma_id, $aprm_id, $subactivity_name);
         $wpdb->query($sql);
            // Get new subactivity id created by mysql
         $subactivity_id = $wpdb->insert_id;
@@ -308,7 +309,7 @@ function annuaire_artisans_get_activity_name($cma_id)
      709=>"Restauration d'objets d'Art",
      710=>"Travail du verre et vitrail",
      711=>"Vannerie, cannage, rempaillage",
-     712=>"Travaux de menuiserie bois et pvc",
+     712=>"Ebénisterie, restauration de meubles",
      801=>"Désinfection, dératisation, désinsectisation",
      802=>"Exploitation de carrière, extraction",
      803=>"Imprimerie,sérigraphie",

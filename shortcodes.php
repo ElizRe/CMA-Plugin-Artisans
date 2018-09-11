@@ -15,7 +15,7 @@ function artisanjs_enqueue_script()
 
 add_action('wp_enqueue_scripts', 'artisancss_enqueue_style', 'artisanjs_enqueue_script');
 
-/* add ajax to dropdown form files */
+/* add ajax to dropdown select page annuaireartisanslot*/
 
 function artisan_form_ajax_activity()
 {
@@ -32,7 +32,7 @@ function artisan_form_ajax_activity()
         $form .= '<label for="activity">Sélectionnez une activité</label>';
         $form .= '<br>';
         $form .= '<select name="activity" id="s3">';
-                $form .= '<option value="0">Tous les activités</option>';
+                $form .= '<option value="0">Toutes les activités</option>';
         $table_name = $wpdb->prefix . 'art_activity';
         $filter = $wpdb->get_results("select * from $table_name WHERE SUBSTR(cma_id,1,1) = " . $family);
         foreach ($filter as $row) {
@@ -118,6 +118,7 @@ function artisans_form($atts)
                 <option value="0">Toutes les démarches</option>';
 
     $table_name = $wpdb->prefix . 'art_website';
+    // coding to avoid showing duplicates from database
     $filter = $wpdb->get_results("select * from $table_name WHERE website_expert != 'Artisan'");
     foreach ($filter as $row) {
         if ($website == $row->website_code) {
@@ -242,9 +243,10 @@ function artisans_results($atts)
     $table_name3 = $wpdb->prefix . 'art_town';
     $table_name4 = $wpdb->prefix . 'art_website';
 
-    $sql = "SELECT rm_id,website_expert,subactivity_name,business_name,address_1,
-        address_2,telephone,fax,email,postal_code,
-        artisan.website_code,town_name,sub.subactivity_id,cma
+    $sql = "SELECT rm_id,website_expert,subactivity_name,
+            business_name,address_1,address_2,telephone,fax,email,
+            postal_code,level,artisan.website_code,town_name,
+            sub.subactivity_id,cma
                FROM $table_name as artisan
                JOIN $table_name2 as sub
                ON artisan.subactivity_id=sub.subactivity_id
@@ -281,9 +283,24 @@ function artisans_results($atts)
         $list .= '<h2 class="artisan">'. $print->business_name.'</h2>';
         $list .= '<div class="our-services-wrapper mb-60">';
         $list .= '<div class="services-inner">';
-        $list .= '<div class="our-services-img">';
-        $list .= '<img src="http://localhost:8888/wp-content/uploads/2018/09/artisan.png" width="68px" alt="artisan">';
-        $list .= '</div>';
+        $list .= '</p><p>';
+        if ($print->level == "MAITRE ARTISAN") {
+            $list .= '<div class="our-services-img">';
+            $list .= '<img src="' . plugins_url('images/expertartisan.png', __FILE__) . '"> ';
+            $list .= '</div>';
+        } elseif ($print->level == "MAITRE ARTISAN EN METIERS D'ART") {
+            $list .= '<div class="our-services-img">';
+            $list .= '<img src="' . plugins_url('images/expertartisan.png', __FILE__) . '"> ';
+            $list .= '</div>';
+        } elseif ($print->level == "ARTISAN") {
+            $list .= '<div class="our-services-img">';
+            $list .= '<img src="' . plugins_url('images/artisan.png', __FILE__) . '"> ';
+            $list .= '</div>';
+        } elseif ($print->level == "ARTISAN EN METIERS D'ART") {
+            $list .= '<div class="our-services-img">';
+            $list .= '<img src="' . plugins_url('images/artisan.png', __FILE__) . '"> ';
+            $list .= '</div>';
+        }
         $list .= '<div class="our-services-text">';
         $list .= '<p class="activity"><span>Qualification Artisanale:</span><br />'. $print->website_expert.'</p>';
         $list .= '<p class="activity"><span>Activité:</span><br />'. $print->subactivity_name.'</p>';
@@ -300,8 +317,12 @@ function artisans_results($atts)
             $list .= '<a href="mailto:'. $print->email.'">'. $print->email.'</a>';
         }
         $list .= '</p>';
-        $list .= '<p>Vitrine:<br />';
-        $list .= '<a href="http://www.cma-cahors.fr/vitrines/'.$print->rm_id.'.htm" target="_blank">'.$print->business_name.'</a></p>';
+        
+        $list .= '<p></p>';
+        if ($print->website_code != "11") {
+            $list .= '<p>Vitrine:<br />';
+            $list .= '<a href="http://www.cma-cahors.fr/vitrines/'.$print->rm_id.'.htm" target="_blank">'.$print->business_name.'</a></p>';
+        }
         $list .= '</div>';
         $list .= '</div>';
         $list .= '</div>';
