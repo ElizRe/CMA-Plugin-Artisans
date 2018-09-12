@@ -89,10 +89,10 @@ function artisan_form_ajax_cantons()
 add_action('wp_ajax_artisan_form_ajax_cantons', 'artisan_form_ajax_cantons');
 add_action('wp_ajax_nopriv_artisan_form_ajax_cantons', 'artisan_form_ajax_cantons');
 
-
+/* end of ajax coding *
 
 /* main code to use dropdown menu annuaire artisan page*/
-
+// on page annuaire artisans this is the shortcode artisans-form
 function artisans_form($atts)
 {
     global $wpdb;
@@ -112,13 +112,13 @@ function artisans_form($atts)
      // expertise
     $form .= '<div class="form-group">';
 
-    $form .= '<label for="website">Sélectionnez une démarche</label>';
+    $form .= '<label for="website">Sélectionnez une démarche </label>';
     $form .= '<br>';
     $form .= '<select name="website" id="s1">
-                <option value="0">Toutes les démarches</option>';
+                <option value="0">Tous les Artisans</option>';
 
     $table_name = $wpdb->prefix . 'art_website';
-    // coding to avoid showing duplicates from database
+    // coding to avoid showing duplicates of Artisan from database
     $filter = $wpdb->get_results("select * from $table_name WHERE website_expert != 'Artisan'");
     foreach ($filter as $row) {
         if ($website == $row->website_code) {
@@ -220,7 +220,7 @@ function artisans_form($atts)
 }
 
 
-
+// on page annuaire artisans this is the shortcode artisans-results
 function artisans_results($atts)
 {
     global $wpdb;
@@ -302,8 +302,18 @@ function artisans_results($atts)
             $list .= '</div>';
         }
         $list .= '<div class="our-services-text">';
-        $list .= '<p class="activity"><span>Qualification Artisanale:</span><br />'. $print->website_expert.'</p>';
-        $list .= '<p class="activity"><span>Activité:</span><br />'. $print->subactivity_name.'</p>';
+        $list .= '<p class="activity"><span>Activité:</span><br/><br/>'. $print->subactivity_name.'</p>';
+        if ($print->level) {
+            $list .= '<p class="title"><span>Titre:</span><br /><br />'. $print->level.'</p>';
+        }
+        $list .= '<p></p>';
+        if ($print->website_code =="44") {
+            $list .= '<p class="expert"><span>Les Démarches remarquables:</span><br /><br />'. $print->website_expert.'</p>';
+        } elseif ($print->website_code == "66") {
+            $list .= '<p class="expert"><span>Les Démarches remarquables:</span><br /><br />'. $print->website_expert.'</p>';
+        } elseif ($print->website_code == "76") {
+            $list .= '<p class="expert"><span>Les Démarches remarquables:</span><br /><br />'. $print->website_expert.'</p>';
+        }
         $list .= '<p>'. $print->address_1.', '. $print->address_2.'<br />';
         $list .= $print->town_name.',  '. $print->postal_code.'</p><p>';
         if ($print->telephone) {

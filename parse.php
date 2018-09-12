@@ -27,7 +27,7 @@ function annuaire_artisans_page_parse($file)
             annuaire_artisans_insert($data);
             $row++;
         }
-
+       
         fclose($handle);
         echo "<p>$row artisans importés</p>\n";
         echo 'Le fichier CSV a été importé avec succès';
