@@ -2,15 +2,16 @@
 // load my plugin css and bootstrap into the website's front-end
 function artisancss_enqueue_style()
 {
-    wp_enqueue_style('erstyle', plugins_url('assets/css/erstyle.css', __FILE__));
-    wp_enqueue_style('artisan-style', plugins_url('assets/css/bootstrap.min.css', __FILE__));
+        wp_enqueue_style('erstyle', plugins_url('assets/css/erstyle.css', __FILE__));
+        wp_enqueue_style('artisan-style', plugins_url('assets/css/bootstrap.min.css', __FILE__));
 }
+
 // load bootstrap js into the website's front-end
 
 function artisanjs_enqueue_script()
 {
-    wp_enqueue_script('bootstrap_js', 'https://code.jquery.com/jquery-3.3.1.slim.min.js');
-    wp_enqueue_script('popper_js', 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js');
+        wp_enqueue_script('bootstrap_js', 'https://code.jquery.com/jquery-3.3.1.slim.min.js');
+        wp_enqueue_script('popper_js', 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js');
 }
 
 add_action('wp_enqueue_scripts', 'artisancss_enqueue_style', 'artisanjs_enqueue_script');
@@ -20,7 +21,7 @@ add_action('wp_enqueue_scripts', 'artisancss_enqueue_style', 'artisanjs_enqueue_
 function artisan_form_ajax_activity()
 {
     global $wpdb;
-
+    
     check_ajax_referer('artisan_nonce');
 
     $family = intval($_POST['family']);
@@ -65,12 +66,21 @@ function artisan_form_ajax_cantons()
     //Town
     if ($district) {
         $form .= '<div class="form-group">';
-        $form .= '<label for="town">Sélectionnez une communes</label>';
+        $form .= '<label for="town">Sélectionnez une commune</label>';
         $form .= '<br>';
         $form .= '<select name="town" id="s6">';
         $form .= '<option value="0">Toutes les communes</option>';
         $table_name = $wpdb->prefix . 'art_town';
-        $filter = $wpdb->get_results("select * from $table_name WHERE district_id = " . $district);
+        //$filter = $wpdb->get_results("select * from $table_name WHERE district_id = " . $district);
+        // cahors
+        if ($district == 1 || $district == 2 || $district ==3) {
+            $filter = $wpdb->get_results("select * from $table_name WHERE district_id in (1,2,3) order by town_name");
+        } // figeac
+        elseif ($district == 7 || $district == 8) {
+            $filter = $wpdb->get_results("select * from $table_name WHERE district_id in (7,8) order by town_name");
+        } else {
+            $filter = $wpdb->get_results("select * from $table_name WHERE district_id = " . $district . " order by town_name");
+        }
         foreach ($filter as $row) {
             if ($town == $row->town_id) {
                 $form .= '<option selected="selected" value="' . $row->town_id . '">' . $row->town_name . '</option>';
@@ -89,10 +99,10 @@ function artisan_form_ajax_cantons()
 add_action('wp_ajax_artisan_form_ajax_cantons', 'artisan_form_ajax_cantons');
 add_action('wp_ajax_nopriv_artisan_form_ajax_cantons', 'artisan_form_ajax_cantons');
 
-/* end of ajax coding *
+
 
 /* main code to use dropdown menu annuaire artisan page*/
-// on page annuaire artisans this is the shortcode artisans-form
+
 function artisans_form($atts)
 {
     global $wpdb;
@@ -112,13 +122,13 @@ function artisans_form($atts)
      // expertise
     $form .= '<div class="form-group">';
 
-    $form .= '<label for="website">Sélectionnez une démarche </label>';
+    $form .= '<label for="website">Sélectionnez les Démarches remarquables</label>';
     $form .= '<br>';
     $form .= '<select name="website" id="s1">
                 <option value="0">Tous les Artisans</option>';
 
     $table_name = $wpdb->prefix . 'art_website';
-    // coding to avoid showing duplicates of Artisan from database
+    // coding to avoid showing duplicates from database
     $filter = $wpdb->get_results("select * from $table_name WHERE website_expert != 'Artisan'");
     foreach ($filter as $row) {
         if ($website == $row->website_code) {
@@ -180,10 +190,31 @@ function artisans_form($atts)
     $table_name = $wpdb->prefix . 'art_district';
     $filter = $wpdb->get_results("select * from $table_name");
     foreach ($filter as $row) {
-        if ($district == $row->district_id) {
+        /*if ($district == $row->district_id) {
             $form .= '<option selected="selected" value="' . $row->district_id . '">' . $row->district_name . '</option>';
         } else {
             $form .= '<option value="' . $row->district_id . '">' . $row->district_name . '</option>';
+        }*/
+        if ($row->district_id != 2 && $row->district_id != 3 && $row->district_id != 8) {
+            if ($row->district_id == 1) {
+                if ($district == $row->district_id) {
+                    $form .= '<option selected="selected" value="' . $row->district_id . '">CAHORS tous cantons</option>';
+                } else {
+                    $form .= '<option value="' . $row->district_id . '">CAHORS tous cantons</option>';
+                }
+            } elseif ($row->district_id == 7) {
+                if ($district == $row->district_id) {
+                    $form .= '<option selected="selected" value="' . $row->district_id . '">FIGEAC tous cantons</option>';
+                } else {
+                    $form .= '<option value="' . $row->district_id . '">FIGEAC tous cantons</option>';
+                }
+            } else {
+                if ($district == $row->district_id) {
+                    $form .= '<option selected="selected" value="' . $row->district_id . '">' . $row->district_name . '</option>';
+                } else {
+                    $form .= '<option value="' . $row->district_id . '">' . $row->district_name . '</option>';
+                }
+            }
         }
     }
     $form .= '</select>';
@@ -197,7 +228,16 @@ function artisans_form($atts)
         $form .= '<select name="town" id="s6">';
         $form .= '<option value="0">Toutes les communes</option>';
         $table_name = $wpdb->prefix . 'art_town';
-        $filter = $wpdb->get_results("select * from $table_name WHERE district_id = " . $district);
+        //$filter = $wpdb->get_results("select * from $table_name WHERE district_id = " . $district);
+        // cahors
+        if ($district == 1 || $district == 2 || $district ==3) {
+            $filter = $wpdb->get_results("select * from $table_name WHERE district_id in (1,2,3) order by town_name");
+        } // figeac
+        elseif ($district == 7 || $district == 8) {
+            $filter = $wpdb->get_results("select * from $table_name WHERE district_id in (7,8) order by town_name");
+        } else {
+            $filter = $wpdb->get_results("select * from $table_name WHERE district_id = " . $district . " order by town_name");
+        }
         foreach ($filter as $row) {
             if ($town == $row->town_id) {
                 $form .= '<option selected="selected" value="' . $row->town_id . '">' . $row->town_name . '</option>';
@@ -220,11 +260,17 @@ function artisans_form($atts)
 }
 
 
-// on page annuaire artisans this is the shortcode artisans-results
+
 function artisans_results($atts)
 {
     global $wpdb;
-
+    /*
+    static $FirstTime = 0;
+    if($FirstTime == 0){
+        $FirstTime = 1;
+        return '';
+    }
+    */
     $list = '';
     $lien = "vitrines/". $print->rm_id.".htm";
 
@@ -242,37 +288,69 @@ function artisans_results($atts)
     $table_name2 = $wpdb->prefix . 'art_subactivity';
     $table_name3 = $wpdb->prefix . 'art_town';
     $table_name4 = $wpdb->prefix . 'art_website';
+    $table_name5 = $wpdb->prefix . 'art_district';
+    $table_name6 = $wpdb->prefix . 'art_activity';
+    $table_name7 = $wpdb->prefix . 'art_family';
 
-    $sql = "SELECT rm_id,website_expert,subactivity_name,
-            business_name,address_1,address_2,telephone,fax,email,
-            postal_code,level,artisan.website_code,town_name,
-            sub.subactivity_id,cma
-               FROM $table_name as artisan
-               JOIN $table_name2 as sub
-               ON artisan.subactivity_id=sub.subactivity_id
-               JOIN $table_name3 as town
-               ON artisan.town_id=town.town_id
-               JOIN  $table_name4 as web
-               on artisan.website_code=web.website_code
-               WHERE 1 ";
+    $sql = "SELECT	artisan.rm_id,
+		web.website_expert,
+		group_concat(distinct sub.subactivity_name order by sub.subactivity_name asc separator ', ') as subactivity_name,
+		artisan.business_name,
+		artisan.address_1,
+		artisan.address_2,
+		artisan.telephone,
+		artisan.fax,
+		artisan.email,
+		town.postal_code,
+		artisan.level,
+		artisan.website_code,
+		town.town_name,
+		sub.subactivity_id,
+		sub.cma
+		FROM $table_name as artisan
+		JOIN   $table_name4 as web
+		on artisan.website_code=web.website_code
+		JOIN  $table_name3 as town
+		ON artisan.town_id=town.town_id
+        left join $table_name5 as district
+        on town.district_id = district.district_id
+        JOIN  $table_name2 as sub
+		ON artisan.subactivity_id=sub.subactivity_id
+        left join $table_name6 as act
+        on sub.cma = act.cma_id
+        left join $table_name7 as family
+        on act.family_id = family.family_id
+		WHERE 1 ";
 
     if ($website) {
         $sql .= "AND artisan.website_code = $website ";
     }
     if ($family) {
-        //$sql .= "AND xxxx = $family ";
+        $sql .= "AND family.family_id = $family ";
     }
     if ($activity) {
         $sql .= "AND sub.cma = $activity ";
     }
+    
     if ($district) {
-        //$sql .= "AND xxxx = $district ";
+        // cahors
+        if ($district == 1 || $district == 2 || $district == 3) {
+            $sql .= "AND district.district_id in (1,2,3)";
+        } // figeac
+        elseif ($district == 7 || $district == 8) {
+            $sql .= "AND district.district_id in (7,8)";
+        } else {
+            $sql .= "AND district.district_id = $district ";
+        }
     }
     if ($town) {
         $sql .= "AND artisan.town_id = $town ";
     }
+    
+    
+    
         
-    $sql .= "GROUP BY (artisan.rm_id)";
+    $sql .= "GROUP BY (artisan.rm_id) order by business_name";
 
     $results = $wpdb->get_results($sql);
 
@@ -284,6 +362,7 @@ function artisans_results($atts)
         $list .= '<div class="our-services-wrapper mb-60">';
         $list .= '<div class="services-inner">';
         $list .= '</p><p>';
+        /* show a different logo depending on artisan title */
         if ($print->level == "MAITRE ARTISAN") {
             $list .= '<div class="our-services-img">';
             $list .= '<img src="' . plugins_url('images/expertartisan.png', __FILE__) . '"> ';
@@ -302,20 +381,10 @@ function artisans_results($atts)
             $list .= '</div>';
         }
         $list .= '<div class="our-services-text">';
-        $list .= '<p class="activity"><span>Activité:</span><br/><br/>'. $print->subactivity_name.'</p>';
-        if ($print->level) {
-            $list .= '<p class="title"><span>Titre:</span><br /><br />'. $print->level.'</p>';
-        }
-        $list .= '<p></p>';
-        if ($print->website_code =="44") {
-            $list .= '<p class="expert"><span>Les Démarches remarquables:</span><br /><br />'. $print->website_expert.'</p>';
-        } elseif ($print->website_code == "66") {
-            $list .= '<p class="expert"><span>Les Démarches remarquables:</span><br /><br />'. $print->website_expert.'</p>';
-        } elseif ($print->website_code == "76") {
-            $list .= '<p class="expert"><span>Les Démarches remarquables:</span><br /><br />'. $print->website_expert.'</p>';
-        }
-        $list .= '<p>'. $print->address_1.', '. $print->address_2.'<br />';
-        $list .= $print->town_name.',  '. $print->postal_code.'</p><p>';
+        $list .= '<p class="activity"><span>Titre:</span><br />'. $print->website_expert.'</p>';
+        $list .= '<p class="activity"><span>Activité:</span><br />'. $print->subactivity_name.'</p>';
+        $list .= '<p>'. $print->address_1.'<br />'. $print->address_2.'<br />';
+        $list .= $print->postal_code.'  '. $print->town_name.'</p><p>';
         if ($print->telephone) {
             $list .= 'Tél: 0' . $print->telephone.'<br />';
         }

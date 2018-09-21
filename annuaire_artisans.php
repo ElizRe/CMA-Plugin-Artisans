@@ -6,19 +6,26 @@
 * Version: 1.0
 * Author: Elizabeth Reed
 * License: GNU GPL version 3 ou toute version ultérieure
-*/
+* Ce programme est un logiciel libre ; vous pouvez le redistribuer * ou le modifier suivant les termes de la GNU
+* General Public License telle que publiée par la Free
+* SoftwareFoundation Vous devez avoir reçu une copie de la
+* la GNU General Public License en même temps que ce programme ;
+* si ce n'est pas le cas,
+* consultez <http://www.gnu.org/licenses>.
+**/
 
 require('create_artisan.php');
 require('parse.php');
 require('shortcodes.php');
+
 /** add action and filter hooks*/
 
 
 function er_enqueue()
 {
-    wp_register_style('er_bootstrap', get_template_directory_uri().'/assets/css/bootstrap.min.css');
+    // wp_register_style('er_bootstrap', get_template_directory_uri().'/assets/css/bootstrap.min.css');
     
-    wp_register_script('er_bootstrap', get_template_directory_uri().'/assets/js/bootstrap.min.js');
+    // wp_register_script('er_bootstrap', get_template_directory_uri().'/assets/js/bootstrap.min.js');
 
     wp_enqueue_script(
         'artisanjs',
@@ -46,20 +53,19 @@ function er_enqueue()
 function load_custom_wp_admin_style($hook)
 {
         // Load only on page=tools/annuaire_artisans
-    if ($hook != 'tools_page_annuaire_artisans'and 'page_annuaireartisanslot') {
+    if ($hook != 'tools_page_annuaire_artisans') {
             return;
     }
         wp_enqueue_style('erstyle', plugins_url('assets/css/erstyle.css', __FILE__));
         wp_enqueue_style('er_bootstrap', plugins_url('assets/css/bootstrap.min.css', __FILE__));
         wp_enqueue_script('jquery');
-       // wp_enqueue_script('js-upload-files', plugins_url('assets/js/js-upload-files.js', __FILE__));
+      
         wp_enqueue_script('er_bootstrap', plugins_url('assets/js/bootstrap.min.js', __FILE__));
 }
 add_action('admin_enqueue_scripts', 'load_custom_wp_admin_style');
 add_action('wp_enqueue_scripts', 'er_enqueue');
 
 add_action('admin_menu', 'annuaire_artisans');
-
 
 register_activation_hook(__FILE__, 'annuaire_artisans_create_artisan');
 
