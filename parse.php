@@ -216,7 +216,7 @@ function annuaire_artisans_get_family_name($family_id)
     return isset($family_name[$family_id]) ? $family_name[$family_id] : "";
 }
 
-// Artisan type hardcoded values
+// Artisan activity hardcoded values
 function annuaire_artisans_get_activity_name($cma_id)
 {
     $activity_name = [

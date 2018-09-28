@@ -23,9 +23,6 @@ require('shortcodes.php');
 
 function er_enqueue()
 {
-    // wp_register_style('er_bootstrap', get_template_directory_uri().'/assets/css/bootstrap.min.css');
-    
-    // wp_register_script('er_bootstrap', get_template_directory_uri().'/assets/js/bootstrap.min.js');
 
     wp_enqueue_script(
         'artisanjs',

@@ -49,7 +49,7 @@ function artisan_form_ajax_activity()
     }
 
     echo $form;
-    die();
+    wp_die(); //this is required to terminate immediately and return a proper response
 }
 add_action('wp_ajax_artisan_form_ajax_activity', 'artisan_form_ajax_activity');
 add_action('wp_ajax_nopriv_artisan_form_ajax_activity', 'artisan_form_ajax_activity');
@@ -94,7 +94,7 @@ function artisan_form_ajax_cantons()
     }
 
     echo $form;
-    die();
+    wp_die();
 }
 add_action('wp_ajax_artisan_form_ajax_cantons', 'artisan_form_ajax_cantons');
 add_action('wp_ajax_nopriv_artisan_form_ajax_cantons', 'artisan_form_ajax_cantons');
@@ -190,11 +190,7 @@ function artisans_form($atts)
     $table_name = $wpdb->prefix . 'art_district';
     $filter = $wpdb->get_results("select * from $table_name");
     foreach ($filter as $row) {
-        /*if ($district == $row->district_id) {
-            $form .= '<option selected="selected" value="' . $row->district_id . '">' . $row->district_name . '</option>';
-        } else {
-            $form .= '<option value="' . $row->district_id . '">' . $row->district_name . '</option>';
-        }*/
+        // combine districts 1/2/3 to create cahors tous cantons
         if ($row->district_id != 2 && $row->district_id != 3 && $row->district_id != 8) {
             if ($row->district_id == 1) {
                 if ($district == $row->district_id) {
@@ -202,6 +198,8 @@ function artisans_form($atts)
                 } else {
                     $form .= '<option value="' . $row->district_id . '">CAHORS tous cantons</option>';
                 }
+
+        // combine districts 7/8 to create figeac tous cantons
             } elseif ($row->district_id == 7) {
                 if ($district == $row->district_id) {
                     $form .= '<option selected="selected" value="' . $row->district_id . '">FIGEAC tous cantons</option>';
@@ -264,13 +262,7 @@ function artisans_form($atts)
 function artisans_results($atts)
 {
     global $wpdb;
-    /*
-    static $FirstTime = 0;
-    if($FirstTime == 0){
-        $FirstTime = 1;
-        return '';
-    }
-    */
+   
     $list = '';
     $lien = "vitrines/". $print->rm_id.".htm";
 
@@ -333,10 +325,10 @@ function artisans_results($atts)
     }
     
     if ($district) {
-        // cahors
+        // combine district 1/2/3 to create a selection cahors tous cantons
         if ($district == 1 || $district == 2 || $district == 3) {
             $sql .= "AND district.district_id in (1,2,3)";
-        } // figeac
+        } // combine district 7/8 to create a selection figeac tous cantons
         elseif ($district == 7 || $district == 8) {
             $sql .= "AND district.district_id in (7,8)";
         } else {
