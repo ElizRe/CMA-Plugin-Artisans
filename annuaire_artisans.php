@@ -53,11 +53,11 @@ function load_custom_wp_admin_style($hook)
     if ($hook != 'tools_page_annuaire_artisans') {
             return;
     }
-        wp_enqueue_style('erstyle', plugins_url('assets/css/erstyle.css', __FILE__));
-        wp_enqueue_style('er_bootstrap', plugins_url('assets/css/bootstrap.min.css', __FILE__));
+        wp_enqueue_style('erstyle', plugins_url('assets/css/erstyle.css', __FILE__), array(), null, 'all');
+        wp_enqueue_style('er_bootstrap', plugins_url('assets/css/bootstrap.min.css', __FILE__), array(), null, 'all');
         wp_enqueue_script('jquery');
       
-        wp_enqueue_script('er_bootstrap', plugins_url('assets/js/bootstrap.min.js', __FILE__));
+        wp_enqueue_script('er_bootstrap', plugins_url('assets/js/bootstrap.min.js', __FILE__), array(), null, 'all');
 }
 add_action('admin_enqueue_scripts', 'load_custom_wp_admin_style');
 add_action('wp_enqueue_scripts', 'er_enqueue');
@@ -104,7 +104,7 @@ function annuaire_artisans_page_display()
 
     ?>
              <!-- Standard Form -->
-<div class="containeradmin">
+<div class="ercontaineradmin">
     <form role="form" method="post" input type="file" enctype="multipart/form-data" id="file" accept=".csv">
         <label>Sélectionner le ficher "artisan.csv":</label>
         </br>
@@ -128,4 +128,3 @@ function annuaire_artisans_page_display()
 
     add_shortcode('artisans-form', 'artisans_form');
     add_shortcode('artisans-results', 'artisans_results');
-?>

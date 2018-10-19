@@ -2,16 +2,23 @@
 // load my plugin css and bootstrap into the website's front-end
 function artisancss_enqueue_style()
 {
-        wp_enqueue_style('erstyle', plugins_url('assets/css/erstyle.css', __FILE__));
-        wp_enqueue_style('artisan-style', plugins_url('assets/css/bootstrap.min.css', __FILE__));
+      // Load only on page=tools/annuaire_artisans
+    if (!is_page ('annuaireartisanslot')) {
+            return;
+    }
+        wp_enqueue_style('erstyle', plugins_url('assets/css/erstyle.css', __FILE__), array(), null, 'all');
+        wp_enqueue_style('artisan-style', plugins_url('assets/css/bootstrap.min.css', __FILE__), array(), null, 'all');
 }
 
 // load bootstrap js into the website's front-end
 
 function artisanjs_enqueue_script()
 {
-        wp_enqueue_script('bootstrap_js', 'https://code.jquery.com/jquery-3.3.1.slim.min.js');
-        wp_enqueue_script('popper_js', 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js');
+     if (!is_page ('annuaireartisanslot')) {
+            return;
+    }
+        wp_enqueue_script('bootstrap_js', 'https://code.jquery.com/jquery-3.3.1.slim.min.js', array(), null, 'all');
+        wp_enqueue_script('popper_js', 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js', array(), null, 'all');
 }
 
 add_action('wp_enqueue_scripts', 'artisancss_enqueue_style', 'artisanjs_enqueue_script');
@@ -346,33 +353,33 @@ function artisans_results($atts)
 
     $results = $wpdb->get_results($sql);
 
-    $list .='<div class="container-fluid">';
+    $list .='<div class="ercontainer-fluid">';
     $list .= '<div class="row">';
     foreach ($results as $print) {
         $list .= '<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">';
         $list .= '<h2 class="artisan">'. $print->business_name.'</h2>';
-        $list .= '<div class="our-services-wrapper mb-60">';
-        $list .= '<div class="services-inner">';
+        $list .= '<div class="er-wrapper mb-60">';
+        $list .= '<div class="er-inner">';
         $list .= '</p><p>';
         /* show a different logo depending on artisan title */
         if ($print->level == "MAITRE ARTISAN") {
-            $list .= '<div class="our-services-img">';
+            $list .= '<div class="er-img">';
             $list .= '<img src="' . plugins_url('images/expertartisan.png', __FILE__) . '"> ';
             $list .= '</div>';
         } elseif ($print->level == "MAITRE ARTISAN EN METIERS D'ART") {
-            $list .= '<div class="our-services-img">';
+            $list .= '<div class="er-img">';
             $list .= '<img src="' . plugins_url('images/expertartisan.png', __FILE__) . '"> ';
             $list .= '</div>';
         } elseif ($print->level == "ARTISAN") {
-            $list .= '<div class="our-services-img">';
+            $list .= '<div class="er-img">';
             $list .= '<img src="' . plugins_url('images/artisan.png', __FILE__) . '"> ';
             $list .= '</div>';
         } elseif ($print->level == "ARTISAN EN METIERS D'ART") {
-            $list .= '<div class="our-services-img">';
+            $list .= '<div class="er-img">';
             $list .= '<img src="' . plugins_url('images/artisan.png', __FILE__) . '"> ';
             $list .= '</div>';
         }
-        $list .= '<div class="our-services-text">';
+        $list .= '<div class="er-text">';
         $list .= '<p class="activity"><span>Titre:</span><br />'. $print->website_expert.'</p>';
         $list .= '<p class="activity"><span>Activité:</span><br />'. $print->subactivity_name.'</p>';
         $list .= '<p>'. $print->address_1.'<br />'. $print->address_2.'<br />';
@@ -405,3 +412,4 @@ function artisans_results($atts)
 
     return $list;
 }
+
